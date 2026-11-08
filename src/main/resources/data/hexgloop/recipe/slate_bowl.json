@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    " S "
+  ],
+  "key": {
+    "S": {
+      "item": "hexcasting:slate"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "hexgloop:slate_bowl"
+  }
+}

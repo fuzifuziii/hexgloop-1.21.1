@@ -1,119 +1,186 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.2.+" apply false
-    id "org.jetbrains.kotlin.jvm" version "1.7.10" apply false
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.141'
+    id 'idea'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
-architectury {
-    minecraft = rootProject.minecraft_version
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
 }
 
-subprojects {
-    apply plugin: "org.jetbrains.kotlin.jvm"
-    apply plugin: "dev.architectury.loom"
+// Minecraft 1.21.1 ships Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-    loom {
-        silentMojangMappingsLicense()
+kotlin {
+    jvmToolchain(21)
+}
+
+repositories {
+    maven {
+        name = "BlameJared Maven" // Patchouli
+        url = "https://maven.blamejared.com"
+    }
+    maven {
+        name = "ParchmentMC Maven"
+        url = "https://maven.parchmentmc.org"
+    }
+    maven {
+        name = "Curios"
+        url = "https://maven.theillusivec4.top/"
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Kotlin for Forge'
+                url = 'https://thedarkcolour.github.io/KotlinForForge/'
+            }
+        }
+        filter {
+            includeGroup "thedarkcolour"
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+    // Local dev builds of HexCasting / PAUCAL / MoreIotas (/ Hexal) for 1.21.1, see libs/.
+    exclusiveContent {
+        forRepository {
+            flatDir {
+                dirs "libs"
+            }
+        }
+        filter {
+            includeGroup "libs"
+        }
+    }
+    maven { url = "https://maven.architectury.dev/" }
+    maven { url = "https://maven.shedaniel.me/" }
+    mavenCentral()
+}
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
     }
 
-    dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
-        // mappings loom.officialMojangMappings()
-        // The following line declares the yarn mappings you may select this one as well.
-        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
 
-        // Required for mixin annotation processor
-        annotationProcessor "org.ow2.asm:asm:${project.asm_version}"
-        annotationProcessor "org.ow2.asm:asm-analysis:${project.asm_version}"
-        annotationProcessor "org.ow2.asm:asm-commons:${project.asm_version}"
-        annotationProcessor "org.ow2.asm:asm-tree:${project.asm_version}"
-        annotationProcessor "org.ow2.asm:asm-util:${project.asm_version}"
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'mixin.debug.export', 'true'
+            logLevel = org.slf4j.event.Level.INFO
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
     }
 }
 
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
 
-    archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
-    group = rootProject.maven_group
+dependencies {
+    implementation("libs:hexcasting-neoforge-$minecraft_version:$hexcasting_version")
+    implementation("libs:paucal:$paucal_version+$minecraft_version-neoforge")
+    implementation("libs:moreiotas-${moreiotas_version}-${minecraft_version}-devel-pre-${moreiotas_pre_num}")
+    // Hexal is optional at runtime (HexalLabels is guarded by Platform.isModLoaded), but needed to compile compat code.
+    compileOnly("libs:hexal:$hexal_version")
+    localRuntime("libs:hexal:$hexal_version")
 
+    implementation("vazkii.patchouli:Patchouli:$minecraft_version-$patchouli_version-NEOFORGE")
+    implementation("thedarkcolour:kotlinforforge-neoforge:$kff_version")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Architectury API: registries, networking and events (the 1.19.2 code was built on it).
+    implementation("dev.architectury:architectury-neoforge:$architectury_api_version")
+
+    // Inline is required by HexCasting 0.12 at runtime.
+    localRuntime("maven.modrinth:inline:$minecraft_version-$inline_version-neoforge")
+
+    // Curios: optional slot for the casting ring.
+    compileOnly("top.theillusivec4.curios:curios-neoforge:$curios_version:api")
+    localRuntime("top.theillusivec4.curios:curios-neoforge:$curios_version")
+}
+
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '10000']
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
     repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
-        maven { url 'https://jitpack.io' }
         maven {
-            url "https://squiddev.cc/maven/"
+            url "file://${project.projectDir}/repo"
         }
-        maven { url "https://maven.terraformersmc.com/" }
-        maven { url "https://maven.terraformersmc.com/releases" }
-        maven { url "https://maven.shedaniel.me/" }
-        // Hex Casting Dependencies
-        maven { url "https://maven.blamejared.com/"}
-        maven {
-            name "entity reach"
-            url "https://maven.jamieswhiteshirt.com/libs-release/"
-        }
-        maven { url "https://mvn.devos.one/snapshots/" }
-        maven {
-            name = 'Ladysnake Mods'
-            url = 'https://maven.ladysnake.org/releases'
-        }
-        maven {
-            name = 'Kotlin for Forge'
-            url = 'https://thedarkcolour.github.io/KotlinForForge/'
-        }
-        maven {
-            url = "https://maven.theillusivec4.top/"
-        }
-        maven {
-            name = 'GeckoLib'
-            url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' 
-        }
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = "Modrinth"
-                    url = "https://api.modrinth.com/maven"
-                }
-            }
-            filter {
-                includeGroup "maven.modrinth"
-            }
-        }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.release = 17
-    }
-
-    java {
-        withSourcesJar()
     }
 }
 
-ext.trimChangelog = { changelogString -> 
-    String changelogSec = ""
-    def lines = changelogString.split("\n")
-    Boolean going = false;
-    for (String line : lines){
-        if (line.startsWith("##") && !line.startsWith("###")){
-            if(going)
-                break
-            going = true;
-        }
-        if(going){
-            changelogSec += (line + "\n")
-        }
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
     }
-    // println(changelogSec)
-    return changelogSec
+}
+
+// Dev helper: dumps the compile classpath for quick javac checks (see PORTING_NOTES.md).
+tasks.register('printCompileClasspath') {
+    def cp = sourceSets.main.compileClasspath
+    doLast { file("build/compile-classpath.txt").text = cp.asPath }
 }

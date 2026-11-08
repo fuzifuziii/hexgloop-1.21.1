@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LFL",
+    "FGF",
+    "LFL"
+  ],
+  "key": {
+    "F": {
+      "item": "hexcasting:charged_amethyst"
+    },
+    "G": {
+      "item": "hexgloop:gloop"
+    },
+    "L": {
+      "item": "minecraft:glowstone_dust"
+    }
+  },
+  "result": {
+    "id": "hexgloop:multi_focus"
+  }
+}
