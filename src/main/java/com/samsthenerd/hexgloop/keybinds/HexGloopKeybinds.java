@@ -16,7 +16,6 @@ import at.petrak.hexcasting.common.msgs.MsgShiftScrollC2S;
 import at.petrak.hexcasting.xplat.IClientXplatAbstractions;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.platform.Platform;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -48,10 +47,11 @@ public class HexGloopKeybinds {
         registerKeybind(OPEN_HEX_BOOK, (keyBinding, client)->{}); // don't want to actually *do* anything, but do want to have it registered
     }
 
-    // do it architectury instead of relying on wnboi since forge load order is mean
-    // ok, do it on architectury on forge and normally on fabric, i guess
+    // Registration itself happens in HexGloopForgeClient via NeoForge's RegisterKeyMappingsEvent:
+    // this is called from FMLClientSetupEvent, which is after that event, and Architectury's
+    // KeyMappingRegistry only appends late mappings to options.keyMappings with a warning.
+    // Here we only hook up the per-tick handlers.
     public static void registerKeybind(KeyMapping keybinding, KeybindHandler handler){
-        KeyMappingRegistry.register(keybinding);
         ClientTickEvent.CLIENT_POST.register(minecraft -> {
             handler.run(keybinding, minecraft);
         });
