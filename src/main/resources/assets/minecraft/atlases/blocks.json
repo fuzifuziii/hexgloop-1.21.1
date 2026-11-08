@@ -1,0 +1,6 @@
+{
+  "sources": [
+    { "type": "minecraft:single", "resource": "hexgloop:entity/chest/gloopy_slate_chest" },
+    { "type": "minecraft:single", "resource": "hexgloop:entity/chest/slate_chest" }
+  ]
+}

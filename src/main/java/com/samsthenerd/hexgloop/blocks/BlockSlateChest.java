@@ -271,7 +271,8 @@ public class BlockSlateChest extends BlockCircleComponent implements SimpleWater
         }
     }
 
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -340,7 +341,20 @@ public class BlockSlateChest extends BlockCircleComponent implements SimpleWater
         }
 
         public Optional<MenuProvider> acceptSingle(ChestBlockEntity chestBlockEntity) {
-            return Optional.of(chestBlockEntity);
+            if (chestBlockEntity instanceof BlockEntitySlateChest slateChest) {
+                return Optional.of(new MenuProvider() {
+                    @Override
+                    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
+                        return slateChest.canOpen(player) ? slateChest.createMenu(syncId, playerInventory) : null;
+                    }
+
+                    @Override
+                    public net.minecraft.network.chat.Component getDisplayName() {
+                        return slateChest.getDisplayName();
+                    }
+                });
+            }
+            return Optional.empty();
         }
         public Optional<MenuProvider> acceptNone() {
             return Optional.empty();

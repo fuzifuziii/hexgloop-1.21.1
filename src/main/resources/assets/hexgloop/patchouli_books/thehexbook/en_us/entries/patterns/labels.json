@@ -1,7 +1,6 @@
 {
     "name": "hexgloop.entry.labels",
     "category": "hexcasting:patterns",
-"flag": "hexgloop:gloopyserver",
     "icon": "minecraft:name_tag",
     "sortnum": 7,
     "advancement": "hexcasting:root",

@@ -67,6 +67,7 @@ repositories {
         }
     }
     maven { url = "https://maven.architectury.dev/" }
+    maven { url = "https://maven.emi.dev/releases" }
     maven { url = "https://maven.shedaniel.me/" }
     mavenCentral()
 }
@@ -131,6 +132,10 @@ dependencies {
     // Curios: optional slot for the casting ring.
     compileOnly("top.theillusivec4.curios:curios-neoforge:$curios_version:api")
     localRuntime("top.theillusivec4.curios:curios-neoforge:$curios_version")
+
+    // EMI: optional recipe viewer, only needed to compile the recipe categories.
+    compileOnly("maven.modrinth:emi:$emi_version")
+    localRuntime("maven.modrinth:emi:$emi_version")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

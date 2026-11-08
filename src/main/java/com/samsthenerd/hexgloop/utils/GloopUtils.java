@@ -35,7 +35,7 @@ public class GloopUtils {
             return 0xFF000000 | Mth.hsvToRgb(ClientTickCounter.getTotal() * 2 % 360 / 360F, 0.75F, 1F);
         }
 
-        if(!(stack.getItem() instanceof IotaHolderItem iotaHolder)) return 0xFFFFFF;
+        if(!(stack.getItem() instanceof IotaHolderItem iotaHolder)) return 0xFFFFFFFF;
 
         var iota = iotaHolder.readIota(stack);
         if (iota == null) {

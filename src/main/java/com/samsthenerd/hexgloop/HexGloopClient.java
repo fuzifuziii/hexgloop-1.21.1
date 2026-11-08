@@ -127,24 +127,24 @@ public class HexGloopClient {
             if(tintIndex == 1){
                 Iota iota = HexGloopItems.MULTI_FOCUS_ITEM.get().readIota(stack);
                 if(iota == null){
-                    return 0xFFFFFF; //white
+                    return 0xFFFFFFFF; //white
                 }
                 return iota.getType().color();
             }
-            return 0xFFFFFF; //white
+            return 0xFFFFFFFF; //white
 		}, HexGloopItems.MULTI_FOCUS_ITEM.get());
 
         ColorHandlerRegistry.registerItemColors((stack, tintIndex) -> {
             FrozenPigment colorizer = HexGloopItems.CASTING_POTION_ITEM.get().getColorizer(stack);
             if(tintIndex == 0 || tintIndex >= 5 || colorizer == null){
-                return 0xFFFFFF; //white
+                return 0xFFFFFFFF; //white
             }
             return tintsFromColorizer(colorizer, tintIndex-1, 4);
         }, HexGloopItems.CASTING_POTION_ITEM.get());
 
         ColorHandlerRegistry.registerItemColors((stack, tintIndex) -> {
             if(tintIndex == 1 || tintIndex > 4){ // base
-                return 0xFFFFFF; //white
+                return 0xFFFFFFFF; //white
             }
             int color = ItemGloopDye.getDyeColor(stack);
             if(tintIndex == 0){
@@ -159,7 +159,7 @@ public class HexGloopClient {
             if(tintIndex == 4){ // blue
                 return color & 0x0000FF;
             }
-            return 0xFFFFFF; //white
+            return 0xFFFFFFFF; //white
         }, HexGloopItems.GLOOP_DYE_ITEM.get());
 
         ItemLike[] NEW_FOCII = {HexGloopItems.FOCAL_PENDANT.get(), HexGloopItems.FOCAL_RING.get(), HexGloopItems.CASTERS_COIN.get(), 
@@ -386,7 +386,7 @@ public class HexGloopClient {
         if(be == null) return;
         ItemStack stack = be.getItem(0);
         if(stack.isEmpty()){
-            MutableComponent text = Component.literal("Empty");
+            MutableComponent text = Component.translatable("hexgloop.tooltip.pedestal.empty");
             Style stlye = Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(true);
             text.setStyle(stlye);
             lines.add(new Pair<>(ItemStack.EMPTY, text));

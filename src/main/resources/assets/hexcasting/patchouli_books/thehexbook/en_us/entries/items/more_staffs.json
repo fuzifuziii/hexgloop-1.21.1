@@ -1,0 +1,53 @@
+{
+    "name": "hexgloop.entry.more_staffs",
+    "icon": "hexgloop:blaze_staff",
+    "category": "hexcasting:items",
+    "sortnum": 5,
+    "advancement": "hexcasting:root",
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "text": "hexgloop.page.more_staffs.0"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/carrot_staff",
+        "recipe2": "hexgloop:staffs/bee_staff"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/bone_staff",
+        "recipe2": "hexgloop:staffs/quartz_staff"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/ice_staff",
+        "recipe2": "hexgloop:staffs/blaze_staff"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/wither_staff",
+        "recipe2": "hexgloop:staffs/rod_staff"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/longinus_staff",
+        "recipe2": "hexgloop:staffs/celestial_staff"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/pumpkin_staff",
+        "recipe2": "hexgloop:staffs/menorah_staff"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/candy_cane_staff",
+        "recipe2": "hexgloop:staffs/christmas_tree_staff"
+      },
+      {
+        "type": "patchouli:crafting",
+        "recipe": "hexgloop:staffs/owl_staff",
+        "recipe2": "hexgloop:staffs/ghost_staff"
+      }
+    ]
+  }

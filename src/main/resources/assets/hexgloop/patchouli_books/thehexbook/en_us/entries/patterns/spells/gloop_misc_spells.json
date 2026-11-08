@@ -1,7 +1,6 @@
 {
     "name": "hexgloop.entry.gloop_misc_spells",
     "category": "hexcasting:patterns/spells",
-"flag": "hexgloop:gloopyserver",
     "icon": "minecraft:dispenser",
     "sortnum": 2,
     "advancement": "hexcasting:root",

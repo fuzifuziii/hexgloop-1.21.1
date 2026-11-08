@@ -2,7 +2,6 @@
     "name": "hexgloop.entry.hex_tools",
     "icon": "hexgloop:hex_blade",
     "category": "hexcasting:items",
-"flag": "hexgloop:gloopyserver",
     "sortnum": 10,
     "advancement": "hexcasting:enlightenment",
     "pages": [

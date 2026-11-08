@@ -2,7 +2,6 @@
     "name": "hexgloop.entry.more_staffs",
     "icon": "hexgloop:blaze_staff",
     "category": "hexcasting:items",
-"flag": "hexgloop:gloopyserver",
     "sortnum": 5,
     "advancement": "hexcasting:root",
     "pages": [

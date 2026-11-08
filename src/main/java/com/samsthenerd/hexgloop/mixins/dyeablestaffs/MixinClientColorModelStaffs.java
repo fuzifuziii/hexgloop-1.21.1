@@ -27,7 +27,7 @@ public class MixinClientColorModelStaffs {
             if(tintIndex == 1){
                 return StaffColorLoader.getStaffColor(stack);
             }
-            return 0xFFFFFF;
+            return 0xFFFFFFFF;
         }, staff);
 
         ItemPropertiesRegistry.register(staff, ResourceLocation.parse("hexgloop:is_casting"),

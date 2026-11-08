@@ -2,7 +2,6 @@
     "name": "hexgloop.entry.hex_snacks",
     "icon": "hexgloop:hex_snack",
     "category": "hexcasting:items",
-"flag": "hexgloop:gloopyserver",
     "sortnum": 7,
     "advancement": "hexcasting:root",
     "pages": [

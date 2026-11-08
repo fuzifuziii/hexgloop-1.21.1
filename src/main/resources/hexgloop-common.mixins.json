@@ -31,7 +31,6 @@
       "lociathome.MixinContextHelper",
       "lociathome.MixinExposeChestInventory",
       "mishapprotection.MixinCatchyFrameEval",
-      "mishapprotection.MixinRedirectMishaps",
       "mishapprotection.MixinStoreLastMishapContext",
       "misc.MixinTrackCADHarnesses",
       "misc.MixinActuallyTrackHarnesses",

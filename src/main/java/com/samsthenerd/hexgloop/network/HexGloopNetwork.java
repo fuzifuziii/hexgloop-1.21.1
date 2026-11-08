@@ -78,11 +78,19 @@ public class HexGloopNetwork {
             Player player = context.getPlayer();
             ItemStack frogStackIsh = ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
             ItemStack frogStack = null;
-            for(ItemStack maybeFrog : HexGloopItems.CASTING_FROG_ITEM.get().getEquippedFrogs(player)){
+            var equippedFrogs = HexGloopItems.CASTING_FROG_ITEM.get().getEquippedFrogs(player);
+            for(ItemStack maybeFrog : equippedFrogs){
                 if(ItemStack.matches(maybeFrog, frogStackIsh)){
                     frogStack = maybeFrog;
                     break;
                 }
+            }
+            // ItemStack.matches compares every component, and the client snapshot can differ from the
+            // server stack (frog_variant is written into custom_data by inventoryTick, which does not
+            // necessarily run on both sides for a Curios item). Fall back to the first equipped frog
+            // instead of silently dropping the cast.
+            if(frogStack == null && frogStackIsh.getItem() instanceof ItemCastingFrog && !equippedFrogs.isEmpty()){
+                frogStack = equippedFrogs.get(0);
             }
             if(frogStack != null && frogStack.getItem() instanceof ItemCastingFrog frogItem){
                 frogItem.cast(frogStack, player);

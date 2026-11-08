@@ -1,7 +1,6 @@
 {
     "name": "hexgloop.entry.minds_orchard",
     "category": "hexcasting:patterns",
-"flag": "hexgloop:gloopyserver",
     "icon": "minecraft:apple",
     "sortnum": 7,
     "advancement": "hexcasting:root",

@@ -145,6 +145,15 @@ public class ItemCastingFrog extends ItemPackagedHex {
         var harness = CastingVM.empty(env);
         harness.queueExecuteAndWrapIotas(instrs, sWorld);
 
+        // Hex 0.12: PackagedItemCastEnv only accumulates the cast sound via postExecution;
+        // ItemPackagedHex.use plays env.getSound() itself afterwards. Do the same here,
+        // otherwise frog casts are completely silent.
+        var castSound = env.getSound().sound();
+        if (castSound != null) {
+            var pos = sPlayer.position();
+            sWorld.playSound(null, pos.x, pos.y, pos.z, castSound, net.minecraft.sounds.SoundSource.PLAYERS, 1f, 1f);
+        }
+
         sPlayer.awardStat(Stats.ITEM_USED.get(this));
 
         sPlayer.getCooldowns().addCooldown(this, 5);
